@@ -11,7 +11,7 @@ func TestBitmap_Contain(t *testing.T) {
 	b := NewBitmap()
 
 	for i := 0; i < total; i++ {
-		b.store(i)
+		b.Store(i)
 	}
 
 	for i := 0; i < total*2; i++ {
@@ -43,8 +43,8 @@ func TestBitmap_Store(t *testing.T) {
 	if len(keys) != total {
 		t.Fatal()
 	}
-	for i := range b.Values() {
-		if i != keys[i] {
+	for i := range keys {
+		if keys[i] != i {
 			t.Fatal()
 		}
 	}
@@ -72,8 +72,8 @@ func TestBitmap_StoreMulti(t *testing.T) {
 	if len(keys) != total {
 		t.Fatal()
 	}
-	for i := range b.Values() {
-		if i != keys[i] {
+	for i := range keys {
+		if keys[i] != i {
 			t.Fatal()
 		}
 	}
@@ -153,7 +153,11 @@ func TestBitmap_RemoveMulti(t *testing.T) {
 }
 
 func TestBitmap_And(t *testing.T) {
-	suit := [][3][]int{
+	suit := []struct {
+		bitmap1 []int
+		bitmap2 []int
+		result  []int
+	}{
 		{
 			[]int{},
 			[]int{},
@@ -198,22 +202,26 @@ func TestBitmap_And(t *testing.T) {
 
 	for _, _case := range suit {
 		b, c := NewBitmap(), NewBitmap()
-		b.StoreMulti(_case[0]...)
-		c.StoreMulti(_case[1]...)
+		b.StoreMulti(_case.bitmap1...)
+		c.StoreMulti(_case.bitmap2...)
 
 		b.And(c)
-		if !reflect.DeepEqual(b.Values(), _case[2]) {
+		if !reflect.DeepEqual(b.Values(), _case.result) {
 			t.Fatal()
 		}
-		// 不能修改c
-		if !reflect.DeepEqual(c.Values(), _case[1]) {
+
+		if !reflect.DeepEqual(c.Values(), _case.bitmap2) {
 			t.Fatal()
 		}
 	}
 }
 
 func TestBitmap_Or(t *testing.T) {
-	suit := [][3][]int{
+	suit := []struct {
+		bitmap1 []int
+		bitmap2 []int
+		result  []int
+	}{
 		{
 			[]int{},
 			[]int{},
@@ -258,15 +266,15 @@ func TestBitmap_Or(t *testing.T) {
 
 	for _, _case := range suit {
 		b, c := NewBitmap(), NewBitmap()
-		b.StoreMulti(_case[0]...)
-		c.StoreMulti(_case[1]...)
+		b.StoreMulti(_case.bitmap1...)
+		c.StoreMulti(_case.bitmap2...)
 
 		b.Or(c)
-		if !reflect.DeepEqual(b.Values(), _case[2]) {
+		if !reflect.DeepEqual(b.Values(), _case.result) {
 			t.Fatal()
 		}
-		// 不能修改c
-		if !reflect.DeepEqual(c.Values(), _case[1]) {
+
+		if !reflect.DeepEqual(c.Values(), _case.bitmap2) {
 			t.Fatal()
 		}
 	}

@@ -12,12 +12,12 @@ type PriorityQueue struct {
 	queue *priorityQueue
 }
 
-// NewPriorityQueue creates a priority queue. Member having smaller priority pops earlier if min = true.
-func NewPriorityQueue(min bool) *PriorityQueue {
+// NewPriorityQueue creates a priority queue. Member having greater priority pops earlier if asc = true.
+func NewPriorityQueue(asc bool) *PriorityQueue {
 	return &PriorityQueue{
 		queue: &priorityQueue{
 			members: make([]*PriorityMember, 0),
-			min:     min,
+			asc:     asc,
 		},
 	}
 }
@@ -73,7 +73,7 @@ type PriorityMember struct {
 }
 
 type priorityQueue struct {
-	min     bool
+	asc     bool
 	members []*PriorityMember
 }
 
@@ -82,10 +82,10 @@ func (pq *priorityQueue) Len() int {
 }
 
 func (pq *priorityQueue) Less(i, j int) bool {
-	if pq.min {
-		return pq.members[i].priority < pq.members[j].priority
+	if pq.asc {
+		return pq.members[i].priority > pq.members[j].priority
 	}
-	return pq.members[i].priority > pq.members[j].priority
+	return pq.members[i].priority < pq.members[j].priority
 }
 
 func (pq *priorityQueue) Swap(i, j int) {
@@ -103,7 +103,7 @@ func (pq *priorityQueue) Push(member any) {
 }
 
 func (pq *priorityQueue) Peak() any {
-	if pq.min {
+	if pq.asc {
 		return pq.members[0]
 	}
 	return pq.members[len(pq.members)-1]
