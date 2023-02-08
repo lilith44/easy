@@ -23,7 +23,7 @@ func (ns *NormalStack) Push(value any) {
 	return
 }
 
-// Pop pops and deletes the pop value.
+// Pop pops and deletes the popped value.
 func (ns *NormalStack) Pop() (any, bool) {
 	ns.Lock()
 	defer ns.Unlock()
