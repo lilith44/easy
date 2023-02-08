@@ -83,9 +83,9 @@ func (pq *priorityQueue) Len() int {
 
 func (pq *priorityQueue) Less(i, j int) bool {
 	if pq.asc {
-		return pq.members[i].priority > pq.members[j].priority
+		return pq.members[i].priority < pq.members[j].priority
 	}
-	return pq.members[i].priority < pq.members[j].priority
+	return pq.members[i].priority > pq.members[j].priority
 }
 
 func (pq *priorityQueue) Swap(i, j int) {

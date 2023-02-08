@@ -5,9 +5,9 @@ import (
 	"sync/atomic"
 )
 
-// The reentrant mutex (recursive mutex, recursive lock) is particular type of mutual exclusion (mutex) device
+// ReentrantMutex (recursive mutex, recursive lock) is particular type of mutual exclusion (mutex) device
 // that may be locked multiple times by the same goroutine, without causing a deadlock.
-type reentrantMutex struct {
+type ReentrantMutex struct {
 	mutex sync.Mutex
 
 	gid       uint64
@@ -15,12 +15,12 @@ type reentrantMutex struct {
 }
 
 // NewReentrantMutex returns a new reentrant mutex.
-func NewReentrantMutex() sync.Locker {
-	return &reentrantMutex{}
+func NewReentrantMutex() *ReentrantMutex {
+	return &ReentrantMutex{}
 }
 
 // Lock locks the reentrant mutex.
-func (rm *reentrantMutex) Lock() {
+func (rm *ReentrantMutex) Lock() {
 	gid := Gid()
 	if atomic.LoadUint64(&rm.gid) == gid {
 		rm.recursion++
@@ -33,7 +33,7 @@ func (rm *reentrantMutex) Lock() {
 }
 
 // Unlock unlocks the reentrant mutex.
-func (rm *reentrantMutex) Unlock() {
+func (rm *ReentrantMutex) Unlock() {
 	gid := Gid()
 	if atomic.LoadUint64(&rm.gid) != gid {
 		panic("unlock before lock")
