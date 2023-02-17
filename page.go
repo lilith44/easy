@@ -21,8 +21,8 @@ func NewPage(items any, total int64, page int64, size int64) *Page {
 	return &Page{
 		Page:       page,
 		Size:       size,
-		HasNext:    page > 1,
-		HasPrev:    page < totalPage,
+		HasNext:    page < totalPage,
+		HasPrev:    page > 1,
 		TotalPage:  totalPage,
 		TotalItems: total,
 		Items:      items,
