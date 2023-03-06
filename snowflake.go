@@ -1,0 +1,71 @@
+package easy
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+var (
+	epoch    int64 = 1288834974657
+	nodeBits uint8 = 10
+	stepBits uint8 = 12
+)
+
+type Snowflake struct {
+	mu    sync.Mutex
+	epoch time.Time
+	time  int64
+	node  int64
+	step  int64
+
+	nodeMax   int64
+	nodeMask  int64
+	stepMask  int64
+	timeShift uint8
+	nodeShift uint8
+}
+
+type UniqueIdGenerator func() int64
+
+// NewSnowflake returns a new snowflake object.
+func NewSnowflake(f UniqueIdGenerator) *Snowflake {
+	snowflake := new(Snowflake)
+	snowflake.node = f()
+	snowflake.nodeMax = -1 ^ (-1 << nodeBits)
+	if snowflake.node < 0 || snowflake.node > snowflake.nodeMax {
+		panic(fmt.Sprintf("incorrect node, must be between 0 and %d", snowflake.nodeMax))
+	}
+
+	snowflake.nodeMask = snowflake.nodeMax << stepBits
+	snowflake.stepMask = -1 ^ (-1 << stepBits)
+	snowflake.timeShift = nodeBits + stepBits
+	snowflake.nodeShift = stepBits
+
+	currentTime := time.Now()
+	snowflake.epoch = currentTime.Add(time.Unix(epoch/1000, (epoch%1000)*1000000).Sub(currentTime))
+
+	return snowflake
+}
+
+// NextId generates the next snowflake id.
+func (s *Snowflake) NextId() int64 {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	now := time.Since(s.epoch).Milliseconds()
+	if now == s.time {
+		s.step = (s.step + 1) & s.stepMask
+
+		if s.step == 0 {
+			for now <= s.time {
+				now = time.Since(s.epoch).Milliseconds()
+			}
+		}
+	} else {
+		s.step = 0
+	}
+	s.time = now
+
+	return now<<s.timeShift | s.node<<s.nodeShift | s.step
+}
