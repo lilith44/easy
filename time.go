@@ -95,6 +95,10 @@ func (t Time) String() string {
 	return t.Time().Format(DateTime)
 }
 
+func Now() Time {
+	return NewTime(time.Now())
+}
+
 func SetTimeLayout(layout string) {
 	DateTime = layout
 }
