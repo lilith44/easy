@@ -51,7 +51,7 @@ func (t Time) MarshalText() ([]byte, error) {
 }
 
 func (t *Time) UnmarshalText(data []byte) error {
-	tm, err := time.ParseInLocation(`"`+DateTime+`"`, string(data), time.Local)
+	tm, err := time.ParseInLocation(DateTime, string(data), time.Local)
 	if err != nil {
 		return err
 	}
