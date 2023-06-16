@@ -26,7 +26,7 @@ func MergePeriods[n number](periods ...Period[n]) []Period[n] {
 		points = append(points, point)
 	}
 
-	// 排序获取一个区级左右值切片
+	// 排序获取一个区间左右值切片
 	sort.Slice(points, func(i, j int) bool {
 		return points[i] < points[j]
 	})
