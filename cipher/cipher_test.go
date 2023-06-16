@@ -8,7 +8,7 @@ func TestCipherEncode(t *testing.T) {
 	secret := "thisisverysecret"
 	plainText := "This is a plain text1"
 	cipherText := "b51be4030614b6682c3a6407798eac64964b76e79019421130dfa9d256a4a81f"
-	c, err := NewCipher(ECBMode)
+	c, err := NewCipher(AlgorithmAES, ModeECB)
 	if err != nil {
 		t.Error(err)
 	}
@@ -34,7 +34,7 @@ func TestCipherDecode(t *testing.T) {
 	secret := "thisisverysecret"
 	plainText := "This is a plain text1"
 	cipherText := "b51be4030614b6682c3a6407798eac64964b76e79019421130dfa9d256a4a81f"
-	c, err := NewCipher(ECBMode)
+	c, err := NewCipher(AlgorithmAES, ModeECB)
 	if err != nil {
 		t.Error(err)
 	}
