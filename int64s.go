@@ -3,21 +3,20 @@ package easy
 import (
 	"bytes"
 	"strconv"
-	"unsafe"
 )
 
-// Int64s is an int64 slice but transfers to a string list while json.Marshal.
+// Int64s is an int64 slice but transfers to a string slice while json.Marshal.
 type Int64s []int64
 
-// MarshalJSON implements Marshaler of json.
-func (s *Int64s) MarshalJSON() ([]byte, error) {
+// MarshalJSON implements json.Marshaler.
+func (i *Int64s) MarshalJSON() ([]byte, error) {
 	buffer := bytes.Buffer{}
 	buffer.WriteByte('[')
-	for i := range *s {
+	for idx := range *i {
 		buffer.WriteByte('"')
-		buffer.WriteString(strconv.FormatInt((*s)[i], 10))
+		buffer.WriteString(strconv.FormatInt((*i)[idx], 10))
 		buffer.WriteByte('"')
-		if i != len(*s)-1 {
+		if idx != len(*i)-1 {
 			buffer.Write([]byte(", "))
 		}
 	}
@@ -25,17 +24,17 @@ func (s *Int64s) MarshalJSON() ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-// UnmarshalJSON implements Unmarshaler of json.
-func (s *Int64s) UnmarshalJSON(data []byte) (err error) {
-	return s.unmarshal(data)
+// UnmarshalJSON implements json.Unmarshaler.
+func (i *Int64s) UnmarshalJSON(data []byte) error {
+	return i.unmarshal(data)
 }
 
-// UnmarshalParam implements BindUnmarshaler of echo.
-func (s *Int64s) UnmarshalParam(src string) (err error) {
-	return s.unmarshal([]byte(src))
+// UnmarshalParam implements echo.BindUnmarshaler.
+func (i *Int64s) UnmarshalParam(src string) error {
+	return i.unmarshal([]byte(src))
 }
 
-func (s *Int64s) unmarshal(data []byte) (err error) {
+func (i *Int64s) unmarshal(data []byte) error {
 	if len(data) == 0 || string(data) == "null" {
 		return nil
 	}
@@ -43,19 +42,20 @@ func (s *Int64s) unmarshal(data []byte) (err error) {
 	data = bytes.TrimLeft(bytes.TrimRight(data, "]"), "[")
 	data = bytes.Replace(data, []byte(`"`), []byte(""), -1)
 	if len(data) == 0 {
-		*s = make(Int64s, 0)
-		return
+		return nil
 	}
 
 	byteSlice := bytes.Split(data, []byte(","))
 	int64s := make([]int64, len(byteSlice))
-	for i := range byteSlice {
-		byteSlice[i] = bytes.TrimSpace(byteSlice[i])
-		if int64s[i], err = strconv.ParseInt(*(*string)(unsafe.Pointer(&byteSlice[i])), 10, 64); err != nil {
+	for idx := range byteSlice {
+		byteSlice[idx] = bytes.TrimSpace(byteSlice[idx])
+
+		var err error
+		if int64s[idx], err = strconv.ParseInt(ByteToString(byteSlice[idx]), 10, 64); err != nil {
 			return err
 		}
 	}
 
-	*s = int64s
-	return
+	*i = int64s
+	return nil
 }

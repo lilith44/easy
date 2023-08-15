@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// Gid returns the current goroutine id.
+// Gid gets the current goroutine id.
 func Gid() uint64 {
 	buffer := make([]byte, 64)
 	buffer = buffer[:runtime.Stack(buffer, false)]

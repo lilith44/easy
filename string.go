@@ -1,27 +1,13 @@
 package easy
 
-import "bytes"
+import "unsafe"
 
-func Underscore(str string) string {
-	if str == "" {
-		return ""
-	}
+// ByteToString converts bytes to string.
+func ByteToString(bytes []byte) string {
+	return *(*string)(unsafe.Pointer(&bytes))
+}
 
-	var (
-		buffer bytes.Buffer
-		incr   uint8 = 'a' - 'A'
-	)
-
-	for i := range str {
-		if str[i] >= 'A' && str[i] <= 'Z' {
-			if i != 0 {
-				buffer.WriteByte('_')
-			}
-			buffer.WriteByte(str[i] + incr)
-
-			continue
-		}
-		buffer.WriteByte(str[i])
-	}
-	return buffer.String()
+// StringToByte converts string to bytes.
+func StringToByte(str string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&str))
 }

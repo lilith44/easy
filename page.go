@@ -1,6 +1,6 @@
 package easy
 
-// Page defines a response of pagination querying.
+// Page defines a pagination object.
 type Page struct {
 	Page       int64 `json:"page"`
 	Size       int64 `json:"size"`
@@ -11,7 +11,7 @@ type Page struct {
 	Items      any   `json:"items"`
 }
 
-// NewPage returns a response of pagination querying.
+// NewPage creates a new pagination object.
 func NewPage(items any, total int64, page int64, size int64) *Page {
 	totalPage := total / size
 	if (total % size) != 0 {

@@ -26,12 +26,13 @@ type Snowflake struct {
 	nodeShift uint8
 }
 
+// UniqueIdGenerator generates an unique id.
 type UniqueIdGenerator func() int64
 
-// NewSnowflake returns a new snowflake object.
-func NewSnowflake(f UniqueIdGenerator) *Snowflake {
+// NewSnowflake creates a new snowflake object.
+func NewSnowflake(generator UniqueIdGenerator) *Snowflake {
 	snowflake := new(Snowflake)
-	snowflake.node = f()
+	snowflake.node = generator()
 	snowflake.nodeMax = -1 ^ (-1 << nodeBits)
 	if snowflake.node < 0 || snowflake.node > snowflake.nodeMax {
 		panic(fmt.Sprintf("incorrect node, must be between 0 and %d", snowflake.nodeMax))
@@ -48,7 +49,7 @@ func NewSnowflake(f UniqueIdGenerator) *Snowflake {
 	return snowflake
 }
 
-// NextId generates the next snowflake id.
+// NextId generates a new, unique id.
 func (s *Snowflake) NextId() int64 {
 	s.mu.Lock()
 	defer s.mu.Unlock()
