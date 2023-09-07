@@ -25,7 +25,9 @@ func Underscore(str string) string {
 	buf.Grow(len(str) + 1)
 	for i := range str {
 		if str[i] >= 'A' && str[i] <= 'Z' {
-			buf.WriteByte('_')
+			if i != 0 {
+				buf.WriteByte('_')
+			}
 			buf.WriteByte(str[i] - 'A' + 'a')
 			continue
 		}
@@ -49,7 +51,7 @@ func Camel(str string) string {
 			continue
 		}
 		b := str[i]
-		if toUpper {
+		if toUpper && b >= 'A' && b <= 'Z' {
 			b = b - 'a' + 'A'
 		}
 		buf.WriteByte(b)
