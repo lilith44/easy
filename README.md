@@ -75,7 +75,6 @@ m := slicex.ToMap(s)
 
 // Output: map[1:{}, 2:{}, 3:{}]
 fmt.Println(m)
-
 ```
 
 ### ToMapFunc
@@ -89,7 +88,7 @@ type School struct {
   Name string
 }
 
-s := []*School{
+s := []School{
   {
     Id:   1,
     Name: "小学",
@@ -100,10 +99,10 @@ s := []*School{
   },
 }
 
-m := slicex.ToMapFunc(s, func(school *School) int64 { return school.Id })
+m := slicex.ToMapFunc(s, func(school School) int64 { return school.Id })
 
 // Output: map[1:{Id:1 Name:小学}, 2:{Id:2 Name:"中学"}]
-fmt.Println(m)
+fmt.Printf("%+v\n", m)
 ```
 
 ### ToSliceFunc
@@ -155,7 +154,7 @@ type School struct {
   Name string
 }
 
-s := []*School{
+s := []School{
   {
     Id:   1,
     Name: "小学",
@@ -166,10 +165,10 @@ s := []*School{
   },
 }
 
-r := slicex.DeduplicateFunc(s, func(school *School) int64 { return school.Id })
+r := slicex.DeduplicateFunc(s, func(school School) int64 { return school.Id })
 
 // Output: [{Id:1 Name:小学}]
-fmt.Println(r)
+fmt.Printf("%+v\n", r)
 ```
 
 ### Concat
@@ -193,7 +192,7 @@ fmt.Println(r)
 s1 := []int{1, 2, 2, 3}
 s2 := []int{1, 2, 3}
 
-// Output: false, true
+// Output: false true
 fmt.Println(slicex.IsUnique(s1), slicex.IsUnique(s2))
 ```
 
@@ -243,7 +242,7 @@ fmt.Println(r)
 ``` go
 s := []int{1, 2, 2, 3}
 
-// Output: [1, 2, 2], []
+// Output: [1, 2, 2] []
 fmt.Println(slicex.Paging(s, 1, 3), slicex.Paging(s, 3, 2))
 ```
 
@@ -282,7 +281,7 @@ type Paper struct {
 }
 
 p := &Paper{
-  Scores: easy.Float64s{1.23, 2.34, 3.45}
+  Scores: easy.Float64s{1.23, 2.34, 3.45},
 }
 
 data, err := json.Marshal(p)
@@ -290,7 +289,7 @@ if err != nil {
   return err
 }
 
-// Output: {scores: ["1.23", "2.34", "3.45"]}
+// Output: {"scores":["1.23","2.34","3.45"]}
 fmt.Println(string(data))
 ```
 
@@ -322,7 +321,7 @@ Gid函数返回当前的goroutine的id。官方没有提供对应的方法。
 使用示例：
 
 ``` go
-intervals := []easy.Intervarl[int, int]{
+intervals := []easy.Interval[int, int]{
   {
     Left:  900,
     Right: 960,
@@ -332,12 +331,12 @@ intervals := []easy.Intervarl[int, int]{
     Left:  930,
     Right: 990,
     Power: 50,
-  }  
+  },
 }
 
 r := easy.MergeIntervals(intervals...)
 
-// Output: [{Left:900 Right:930 Power:100}, {Left:930 Right:960 Power:150}, {Left:960 Right:990 Power:50}]
+// Output: [{Left:900 Right:930 Power:100} {Left:930 Right:960 Power:150} {Left:960 Right:990 Power:50}]
 fmt.Println(r)
 ```
 
@@ -368,13 +367,13 @@ snowflake := easy.NewSnowflake(unique())
 fmt.Println(snowflake.NextId())
 ```
 
-### HttpError
+## HttpError
 携带http状态码、业务错误码、信息的结构体
 ``` go
 var ErrUserNotFound = easy.NewHttpError(http.StatusNotFound, 1001, "用户不存在！")
 ```
 
-### HttpResponse
+## HttpResponse
 http接口返回的通用结构体
 ``` go
 func (u *user) Add(c echo.Context) error {
@@ -393,4 +392,22 @@ switch e := err.(type) {
 case x:
     return c.JSON(statusCode, easy.Fail(e.Error()))
 }
+```
+
+## Underscore
+将驼峰式的字符串转为下划线式
+``` go
+s := "blueEyes"
+
+// Output: blue_eyes
+fmt.Println(easy.Underscore(s))
+```
+
+## Camel
+将下划线式的字符串转为驼峰式
+``` go
+s := "blue_eyes"
+
+// Output: blueEyes
+fmt.Println(easy.Underscore(s))
 ```
