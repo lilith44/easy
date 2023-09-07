@@ -21,7 +21,7 @@
 基于泛型，提供了一些处理map的函数。
 ### Keys
 Keys方法返回map的所有key组成的slice，当然这个slice是乱序的。
-```go
+``` go
 m := map[int]string{
   1: "one",
   2: "two",
@@ -35,7 +35,7 @@ fmt.Println(s)
 
 ### Values
 Values方法返回map的所有value组成的slice，当然这个slice是乱序的。
-```go
+``` go
 m := map[int]string{
   1: "one",
   2: "two",
@@ -54,7 +54,7 @@ fmt.Println(s)
 
 某些函数的入参是...any，但你的slice可能是[]int，这种情况可以使用本函数将你的slice转换为[]any，并作为入参。
 
-```go
+``` go
 s := []int{1, 2, 3}
 
 r := slicex.ToSliceAny(s)
@@ -68,7 +68,7 @@ fmt.Println(r)
 
 可以用于去重或判断slice是否包含指定element等操作。
 
-```go
+``` go
 s := []int{1, 2, 3}
 
 m := slicex.ToMap(s)
@@ -83,7 +83,7 @@ fmt.Println(m)
 
 通常可以在多次查询后进行数据组装时使用。
 
-```go
+``` go
 type School struct {
   Id   int64
   Name string
@@ -111,7 +111,7 @@ fmt.Println(m)
 
 通常可以用于获取仅由结构体的部分字段组成的slice。
 
-```go
+``` go
 type School struct {
   Id   int64
   Name string
@@ -137,7 +137,7 @@ fmt.Println(r)
 ### Deduplicate
 基于给定的slice生成去重后的slice；出现相同的element时，下标小的会被保留。注意element需要是可比较的类型。
 
-```go
+``` go
 s := []int{1, 2, 2, 3}
 
 r := slicex.Deduplicate(s)
@@ -149,7 +149,7 @@ fmt.Println(r)
 ### DeduplicateFunc
 基于给定的slice生成去重后的slice；出现相同的K时（K由dup函数生成），下标小的会被保留。注意K需要是可比较的类型。
 
-```go
+``` go
 type School struct {
   Id   int64
   Name string
@@ -175,7 +175,7 @@ fmt.Println(r)
 ### Concat
 将多个slice按顺序拼接成一个新slice。
 
-```go
+``` go
 s1 := []int{1, 2}
 s2 := []int{3, 4}
 s3 := []int{5, 6}
@@ -189,7 +189,7 @@ fmt.Println(r)
 ### IsUnique
 判断给定slice的element是否全部唯一。注意element需要是可比较的类型。
 
-```go
+``` go
 s1 := []int{1, 2, 2, 3}
 s2 := []int{1, 2, 3}
 
@@ -200,7 +200,7 @@ fmt.Println(slicex.IsUnique(s1), slicex.IsUnique(s2))
 ### IsUniqueFunc
 判断给定slice的K（由unique函数生成）是否全部唯一。注意K需要是可比较的类型。
 
-```go
+``` go
 type School struct {
   Id   int64
   Name string
@@ -224,7 +224,7 @@ fmt.Println(slicex.IsUniqueFunc(s, func(school *School) int64 { return school.Id
 ### DeleteFunc
 基于给定的slice，生成删除部分元素后的slice，当del函数返回true时，对应元素将被删除。
 
-```go
+``` go
 s := []int{1, 2, 2, 3}
 
 r := slicex.DeleteFunc(s, func(i int) bool { return i%2 == 0 })
@@ -240,7 +240,7 @@ fmt.Println(r)
 
 注意此函数不会返回nil slice，而是返回一个空slice。
 
-```go
+``` go
 s := []int{1, 2, 2, 3}
 
 // Output: [1, 2, 2], []
@@ -252,7 +252,7 @@ fmt.Println(slicex.Paging(s, 1, 3), slicex.Paging(s, 3, 2))
 
 例如我们可以在tag里加入,string来将数据转化为string。
 
-```go
+``` go
 type Paper struct {
   Score float64 `json:"score,string"`
 }
@@ -260,7 +260,7 @@ type Paper struct {
 
 但当我们使用一个数字切片时，tag里加上,string的方案似乎不太让人满意，会把整个切片当作string进行输出，但我们需要的是一个字符串数组。
 
-```go
+``` go
 type Paper struct {
   Scores []float64 `json:"scores,string"`
 }
@@ -270,19 +270,19 @@ type Paper struct {
 
 为避免这种特殊处理，我们可以考虑定义新类型，并实现对应的Marshal和Unmarshal方法。
 
-```go
+``` go
 type Float64s []float64
 ```
 
 使用示例：
 
-```go
+``` go
 type Paper struct {
-  Scores Float64s `json:"scores"`
+  Scores easy.Float64s `json:"scores"`
 }
 
 p := &Paper{
-  Scores: Float64s{1.23, 2.34, 3.45}
+  Scores: easy.Float64s{1.23, 2.34, 3.45}
 }
 
 data, err := json.Marshal(p)
@@ -317,12 +317,12 @@ Gid函数返回当前的goroutine的id。官方没有提供对应的方法。
 
 学校的每个考场在指定时间段[left, right]内，用于p个考生进行考试。现需要求学校每个时刻的考试人数。
 
-学校的考场1在[15:00, 16:00]被用于100人考试，考场2在[15:30, 16:30]被用于50人考试，那么在[15:00, 15:30]有100人考试，在[15:30, 16:00]有150人考试，在[16:00, 16:30]有50人考试
+学校的考场1在[15:00, 16:00]被用于100人考试，考场2在[15:30, 16:30]被用于50人考试。那么在[15:00, 15:30]有100人考试，在[15:30, 16:00]有150人考试，在[16:00, 16:30]有50人考试
 
 使用示例：
 
-```go
-intervals := []Intervarl[int, int]{
+``` go
+intervals := []easy.Intervarl[int, int]{
   {
     Left:  900,
     Right: 960,
@@ -335,8 +335,62 @@ intervals := []Intervarl[int, int]{
   }  
 }
 
-r := MergeIntervals(intervals...)
+r := easy.MergeIntervals(intervals...)
 
 // Output: [{Left:900 Right:930 Power:100}, {Left:930 Right:960 Power:150}, {Left:960 Right:990 Power:50}]
 fmt.Println(r)
+```
+
+## IsIPInCIDR
+用于判断给定的ip地址是否属于给定网段
+
+``` go
+ip := "192.168.0.1"
+cidr := "192.168.0.0/24"
+
+// Output: true
+fmt.Println(easy.IsIPInCIDR(ip, cidr))
+```
+
+## Snowflake
+基于雪花算法可以分布式地生成唯一id。
+``` go
+unique := func(...) easy.UniqueIdGenerator {
+    return func() int64 {
+        ...
+        
+        // 可以基于redis等分布式地生成唯一的int64值
+    }
+}
+
+snowflake := easy.NewSnowflake(unique())
+
+fmt.Println(snowflake.NextId())
+```
+
+### HttpError
+携带http状态码、业务错误码、信息的结构体
+``` go
+var ErrUserNotFound = easy.NewHttpError(http.StatusNotFound, 1001, "用户不存在！")
+```
+
+### HttpResponse
+http接口返回的通用结构体
+``` go
+func (u *user) Add(c echo.Context) error {
+    ...
+    rsp, err := u.service.Add(...)
+    if err != nil {
+        return err
+    }
+    
+    return c.JSON(http.StatusOK, easy.Succeed(rsp))
+}
+```
+在你的error handler里
+``` go
+switch e := err.(type) {
+case x:
+    return c.JSON(statusCode, easy.Fail(e.Error()))
+}
 ```
