@@ -411,3 +411,6 @@ s := "blue_eyes"
 // Output: blueEyes
 fmt.Println(easy.Underscore(s))
 ```
+
+## Time
+easy.Time在json marshal或者unmarshal时，会以"2006-01-02 15:04:05"的format进行
