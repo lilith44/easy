@@ -51,7 +51,7 @@ func Camel(str string) string {
 			continue
 		}
 		b := str[i]
-		if toUpper && b >= 'A' && b <= 'Z' {
+		if toUpper && b >= 'a' && b <= 'z' {
 			b = b - 'a' + 'A'
 		}
 		buf.WriteByte(b)
