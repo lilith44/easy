@@ -1,7 +1,6 @@
 package easy
 
 import (
-	"errors"
 	"time"
 )
 
@@ -16,7 +15,7 @@ func (t *Time) UnmarshalJSON(data []byte) error {
 		return nil
 	}
 
-	tm, err := time.ParseInLocation(`"`+time.DateTime+`"`, string(data), time.Local)
+	tm, err := time.ParseInLocation(`"`+time.DateTime+`"`, ByteToString(data), time.Local)
 	if err != nil {
 		return err
 	}
@@ -26,30 +25,17 @@ func (t *Time) UnmarshalJSON(data []byte) error {
 }
 
 func (t Time) MarshalJSON() ([]byte, error) {
-	tm := t.Time()
-	if y := tm.Year(); y < 0 || y >= 10000 {
-		return nil, errors.New("Time.MarshalJSON: year outside of range [0,9999]")
-	}
-
-	b := make([]byte, 0, len(time.DateTime)+2)
-	b = append(b, '"')
-	b = tm.AppendFormat(b, time.DateTime)
-	b = append(b, '"')
-	return b, nil
+	format := t.Time().Format(`"` + time.DateTime + `"`)
+	return StringToByte(format), nil
 }
 
 func (t Time) MarshalText() ([]byte, error) {
-	tm := t.Time()
-	if y := tm.Year(); y < 0 || y >= 10000 {
-		return nil, errors.New("Time.MarshalText: year outside of range [0,9999]")
-	}
-
-	b := make([]byte, 0, len(time.DateTime))
-	return tm.AppendFormat(b, time.DateTime), nil
+	format := t.Time().Format(time.DateTime)
+	return StringToByte(format), nil
 }
 
 func (t *Time) UnmarshalText(data []byte) error {
-	tm, err := time.ParseInLocation(time.DateTime, string(data), time.Local)
+	tm, err := time.ParseInLocation(time.DateTime, ByteToString(data), time.Local)
 	if err != nil {
 		return err
 	}

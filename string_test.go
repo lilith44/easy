@@ -24,11 +24,15 @@ var underscoreTests = []*custom{
 	},
 	{
 		input: "BlueEyesChaosMaxDragon",
-		want:  "_blue_eyes_chaos_max_dragon",
+		want:  "blue_eyes_chaos_max_dragon",
 	},
 	{
 		input: "appV1.1.0",
 		want:  "app_v1.1.0",
+	},
+	{
+		input: "BlackMagician",
+		want:  "black_magician",
 	},
 }
 
@@ -55,8 +59,8 @@ var camelTests = []*custom{
 		want:  "blackMagicianGirl",
 	},
 	{
-		input: "_blue_eyes_chaos_max_dragon",
-		want:  "BlueEyesChaosMaxDragon",
+		input: "blue_eyes_chaos_max_dragon",
+		want:  "blueEyesChaosMaxDragon",
 	},
 	{
 		input: "app_v1.1.0",
