@@ -490,7 +490,7 @@ if err != nil {
 }
 ```
 
-## SortedStack
+## MonotoneStack
 
 指单调栈，具体可参考百科。栈元素仅支持cmp.Ordered类型。也是并发安全的。
 
@@ -498,9 +498,9 @@ if err != nil {
 
 ``` go
 // 初始化一个int类型的递增单调栈
-inc := easy.NewSortedStack[int](true)
+inc := easy.NewMonotoneStack[int](true)
 // 初始化一个int类型的递减单调栈
-desc := easy.NewSortedStack[int](false)
+desc := easy.NewMonotoneStack[int](false)
 ```
 
 ### Push
@@ -508,7 +508,7 @@ desc := easy.NewSortedStack[int](false)
 向栈里push一个元素，同时返回pop的元素slice。
 
 ``` go
-inc := easy.NewSortedStack[int](true)
+inc := easy.NewMonotoneStack[int](true)
 _ = inc.Push(10) // 此时栈内元素为[10]
 _ = inc.Push(20) // 此时栈内元素为[10, 20]
 
@@ -523,7 +523,7 @@ fmt.Println(popped)
 从栈里pop一个元素。若栈为空，则会返回error。
 
 ``` go
-inc := easy.NewSortedStack[int](true)
+inc := easy.NewMonotoneStack[int](true)
 _ = inc.Push(10) // 此时栈内元素为[10]
 _ = inc.Push(20) // 此时栈内元素为[10, 20]
 
