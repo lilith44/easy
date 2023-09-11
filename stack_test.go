@@ -119,7 +119,7 @@ func TestStack_Pop_Concurrent(t *testing.T) {
 	}
 }
 
-var increaseSortedStackPushTests = []struct {
+var increaseMonotoneStackPushTests = []struct {
 	element int
 	want    []int
 	popped  []int
@@ -171,7 +171,7 @@ var increaseSortedStackPushTests = []struct {
 	},
 }
 
-var decreaseSortedStackPushTests = []struct {
+var decreaseMonotoneStackPushTests = []struct {
 	element int
 	want    []int
 	popped  []int
@@ -223,9 +223,9 @@ var decreaseSortedStackPushTests = []struct {
 	},
 }
 
-func TestSortedStack_Push(t *testing.T) {
-	stack1 := NewSortedStack[int](true)
-	for _, test := range increaseSortedStackPushTests {
+func TestMonotoneStack_Push(t *testing.T) {
+	stack1 := NewMonotoneStack[int](true)
+	for _, test := range increaseMonotoneStackPushTests {
 		popped := stack1.Push(test.element)
 		if !reflect.DeepEqual(stack1.stack, test.want) {
 			t.Errorf("Push(%v), ss.stack got %v, want %v", test.element, stack1.stack, test.want)
@@ -235,8 +235,8 @@ func TestSortedStack_Push(t *testing.T) {
 		}
 	}
 
-	stack2 := NewSortedStack[int](false)
-	for _, test := range decreaseSortedStackPushTests {
+	stack2 := NewMonotoneStack[int](false)
+	for _, test := range decreaseMonotoneStackPushTests {
 		popped := stack2.Push(test.element)
 		if !reflect.DeepEqual(stack2.stack, test.want) {
 			t.Errorf("Push(%v), got %v, want %v", test.element, stack2.stack, test.want)
@@ -247,7 +247,7 @@ func TestSortedStack_Push(t *testing.T) {
 	}
 }
 
-var increaseSortedStackPopTests = []struct {
+var increaseMonotoneStackPopTests = []struct {
 	push []int
 	pop  []int
 }{
@@ -261,7 +261,7 @@ var increaseSortedStackPopTests = []struct {
 	},
 }
 
-var decreaseSortedStackPopTests = []struct {
+var decreaseMonotoneStackPopTests = []struct {
 	push []int
 	pop  []int
 }{
@@ -275,9 +275,9 @@ var decreaseSortedStackPopTests = []struct {
 	},
 }
 
-func TestSortedStack_Pop(t *testing.T) {
-	stack1 := NewSortedStack[int](true)
-	for _, test := range increaseSortedStackPopTests {
+func TestMonotoneStack_Pop(t *testing.T) {
+	stack1 := NewMonotoneStack[int](true)
+	for _, test := range increaseMonotoneStackPopTests {
 		for _, element := range test.push {
 			stack1.Push(element)
 		}
@@ -294,8 +294,8 @@ func TestSortedStack_Pop(t *testing.T) {
 		}
 	}
 
-	stack2 := NewSortedStack[int](false)
-	for _, test := range decreaseSortedStackPopTests {
+	stack2 := NewMonotoneStack[int](false)
+	for _, test := range decreaseMonotoneStackPopTests {
 		for _, element := range test.push {
 			stack2.Push(element)
 		}
