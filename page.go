@@ -4,10 +4,10 @@ package easy
 type Page struct {
 	Page       int64 `json:"page"`
 	Size       int64 `json:"size"`
-	HasNext    bool  `json:"hasNext"`
-	HasPrev    bool  `json:"hasPrev"`
-	TotalPage  int64 `json:"totalPage"`
-	TotalItems int64 `json:"totalItems"`
+	HasNext    bool  `json:"has_next"`
+	HasPrev    bool  `json:"has_prev"`
+	TotalPage  int64 `json:"total_page"`
+	TotalItems int64 `json:"total_items"`
 	Items      any   `json:"items"`
 }
 
